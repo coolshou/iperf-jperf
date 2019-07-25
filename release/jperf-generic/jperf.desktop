@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=jperf
+Comment=jperf - a Java interface to the iperf network throughput testing suite
+Icon=jperf.png
+Exec=java -classpath jperf.jar:lib/forms-1.1.0.jar:lib/jcommon-1.0.10.jar:lib/jfreechart-1.0.6.jar:lib/swingx-0.9.6.jar net.nlanr.jperf.JPerf
+Terminal=false
+Categories=Network;Java;
+Name[zh_TW]=jperf 
+StartupNotify=true
