@@ -1,11 +1,11 @@
-<project name="JPerf 2.0 builder">
+<project name="JPerf 3.0 builder">
 	<property name="project.root" value=".."/>
 	<property name="project.src.dir" value="${project.root}/src"/>
 	<property name="project.lib.dir" value="${project.root}/lib"/>
 	<property name="project.release.dir" value="${project.root}/release"/>
 	<property name="project.release.distrib.generic.dir" value="${project.release.dir}/jperf-generic"/>
 	<property name="project.name" value="jperf"/>
-	<property name="project.filename" value="jperf-2.0.2"/>
+	<property name="project.filename" value="jperf-3.0"/>
 	<property name="project.release.distrib.dir" value="${project.release.dir}/${project.filename}"/>
 	<property name="project.release.distrib.macdir" value="${project.release.distrib.dir}-mac"/>
 	<property name="project.filename.macapp" value="${project.name}.app"/>
@@ -28,7 +28,6 @@
 		
 		<mkdir dir="${project.release.distrib.dir}/classes"/>
 		<javac 
-			target="1.6"
 			classpathref="project.classpath"
 			destdir="${project.release.distrib.dir}/classes">
 			<src path="${project.src.dir}"/>
@@ -57,7 +56,7 @@
 		</copy>
 	</target>
 	
-	<target name="create zipped distrib" depends="release">
+	<target name="zipped" depends="release">
 		<zip destfile="${project.release.dir}/${project.filename}.zip">
 			<fileset dir="${project.release.dir}">
 				<include name="${project.filename}/**"/>

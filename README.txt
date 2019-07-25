@@ -22,12 +22,17 @@
 *        COMPILATION INSTRUCTIONS          *
 ********************************************
 
-* Go to the 'utilities' directory
 * run the following command (Apache ANT has to be installed on the system) :  
 
-	> ant release
+	> ant release -f utilities/build.xml
 
 This script will create a JPerf distribution into the 'release' directory.
+
+* To create zip package
+
+	> ant zipped -f utilities/build.xml
+
+This script will create a zip distribution into the 'release' directory.
 
 * To build the OS X distributable disk image, execute:
 
