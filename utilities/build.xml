@@ -5,13 +5,13 @@
 	<property name="project.release.dir" value="${project.root}/release"/>
 	<property name="project.release.distrib.generic.dir" value="${project.release.dir}/jperf-generic"/>
 	<property name="project.name" value="jperf"/>
-	<property name="project.filename" value="jperf-3.0"/>
+	<property name="project.filename" value="jperf-3.0.0"/>
 	<property name="project.release.distrib.dir" value="${project.release.dir}/${project.filename}"/>
 	<property name="project.release.distrib.macdir" value="${project.release.distrib.dir}-mac"/>
 	<property name="project.filename.macapp" value="${project.name}.app"/>
 	<property name="project.release.distrib.macdmg" value="${project.filename}.dmg"/>
 	<property name="project.release.distrib.macapp" value="${project.release.distrib.macdir}/${project.filename.macapp}"/>
-	
+
 	<path id="project.classpath">
 		<fileset dir="${project.lib.dir}">
 			<include name="**/*.jar" />
@@ -29,7 +29,9 @@
 		</copy>
 		
 		<mkdir dir="${project.release.distrib.dir}/classes"/>
-		<javac 
+		<javac
+			deprecation="no"
+			nowarn="true"
 			classpathref="project.classpath"
 			destdir="${project.release.distrib.dir}/classes">
 			<src path="${project.src.dir}"/>
@@ -56,9 +58,11 @@
 				<include name="README.txt"/>
 			</fileset>
 		</copy>
+		<chmod file="${project.release.distrib.dir}/jperf.sh" perm="+x" type="both"/>
 	</target>
-	
+
 	<target name="zipped" depends="release">
+		<delete file="${project.release.dir}/${project.filename}.zip"  />
 		<zip destfile="${project.release.dir}/${project.filename}.zip">
 			<fileset dir="${project.release.dir}">
 				<include name="${project.filename}/**"/>

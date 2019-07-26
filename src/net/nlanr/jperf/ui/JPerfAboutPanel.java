@@ -1,14 +1,14 @@
 /**
  * - 02/2008: Class created by Nicolas Richasse
  * - 03/2008: Class updated by Nicolas Richasse
- * 
+ *
  * Changelog:
  *-02/2008:
  *  - class created
- * 
+ *
  *-03/2008:
  *  - acknowledgements panel improved
- *  
+ *
  *-04/2009:
  * 	- URL and version updated
  */
@@ -35,27 +35,27 @@ import javax.swing.JTextArea;
 
 import net.nlanr.jperf.JPerf;
 
-public class JPerfAboutPanel extends JPanel 
+public class JPerfAboutPanel extends JPanel
 {
 	private String version;
-	
+
 	public JPerfAboutPanel(String version)
 	{
 		this.version = version;
 		init();
 	}
-	
+
 	private void init()
 	{
 		this.setLayout(new BorderLayout());
-		
+
 		JPanel top = new JPanel();
 		top.setLayout(new FlowLayout(FlowLayout.LEFT));
 		JTabbedPane bottom = new JTabbedPane();
-		
+
 		this.add(top, BorderLayout.NORTH);
 		this.add(bottom, BorderLayout.CENTER);
-				
+
 		// print out name, print out version, print out copyright (short statement), and web link
 
 		// Iperf graphic
@@ -91,27 +91,37 @@ public class JPerfAboutPanel extends JPanel
 		// add developers information
 		JPanel devPanel = new JPanel();
 		devPanel.setLayout(new BoxLayout(devPanel, BoxLayout.Y_AXIS));
-		
+
 		JLabel dev;
-		
 		dev = new JLabel("  ");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
-		
+
+		dev = new JLabel("JPerf 3.x.x developers:");
+		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
+		devPanel.add(dev);
+		dev = new JLabel("https://github.com/esnet/iperf");
+		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
+		devPanel.add(dev);
+
+		dev = new JLabel("  ");
+		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
+		devPanel.add(dev);
+
 		dev = new JLabel("JPerf 2.x.x developers:");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
 		dev = new JLabel("Nicolas Richasse");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
-		
+
 		dev = new JLabel("  ");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
 		dev = new JLabel("  ");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
-		
+
 		dev = new JLabel("JPerf 1.x.x developers:");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
@@ -157,7 +167,7 @@ public class JPerfAboutPanel extends JPanel
 		dev = new JLabel("API from http://www.jfree.org/jfreechart/");
 		dev.setAlignmentX(Component.CENTER_ALIGNMENT);
 		devPanel.add(dev);
-		
+
 		bottom.addTab("Developers", null, new JScrollPane(devPanel));
 
 		JPanel ackPanel = new JPanel(new BorderLayout());
