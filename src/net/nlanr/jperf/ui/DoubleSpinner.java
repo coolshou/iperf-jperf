@@ -19,10 +19,18 @@ public class DoubleSpinner extends JSpinner
 	
 	public DoubleSpinner(double min, double max, double step, double initialValue)
 	{
-		spinnerNumberModel.setValue(new Double(initialValue));
-		spinnerNumberModel.setStepSize(new Double(step));
-		spinnerNumberModel.setMaximum(new Double(max));
-		spinnerNumberModel.setMinimum(new Double(min));
+		Double dVal = Double.valueOf(initialValue);
+		spinnerNumberModel.setValue(dVal);
+		// spinnerNumberModel.setValue(new Double(initialValue));
+		Double dStep = Double.valueOf(step);
+		spinnerNumberModel.setStepSize(dStep);
+		// spinnerNumberModel.setStepSize(new Double(step));
+		Double dMax = Double.valueOf(max);
+		spinnerNumberModel.setMaximum(dMax);
+		// spinnerNumberModel.setMaximum(new Double(max));
+		Double dMin = Double.valueOf(min);
+		spinnerNumberModel.setMinimum(dMin);
+		// spinnerNumberModel.setMinimum(new Double(min));
 		
 		this.setModel(spinnerNumberModel);
 	}

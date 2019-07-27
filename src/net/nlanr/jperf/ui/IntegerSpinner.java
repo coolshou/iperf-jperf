@@ -21,10 +21,18 @@ public class IntegerSpinner extends JSpinner
 	
 	public IntegerSpinner(int min, int max, int step, int initialValue)
 	{
-		spinnerNumberModel.setValue(new Integer(initialValue));
-		spinnerNumberModel.setStepSize(new Integer(step));
-		spinnerNumberModel.setMaximum(new Integer(max));
-		spinnerNumberModel.setMinimum(new Integer(min));
+		Integer iVal =  Integer.valueOf(initialValue);
+		spinnerNumberModel.setValue(iVal);
+		// spinnerNumberModel.setValue(new Integer(initialValue));
+		Integer iStep =  Integer.valueOf(step);
+		spinnerNumberModel.setStepSize(iStep);
+		// spinnerNumberModel.setStepSize(new Integer(step));
+		Integer iMax =  Integer.valueOf(max);
+		spinnerNumberModel.setMaximum(iMax);
+		// spinnerNumberModel.setMaximum(new Integer(max));
+		Integer iMin =  Integer.valueOf(min);
+		spinnerNumberModel.setMinimum(iMin);
+		// spinnerNumberModel.setMinimum(new Integer(min));
 		
 		this.setModel(spinnerNumberModel);
 		this.setPreferredSize(new Dimension(120, 20));

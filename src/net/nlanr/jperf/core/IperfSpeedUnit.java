@@ -12,7 +12,7 @@ package net.nlanr.jperf.core;
 
 public enum IperfSpeedUnit
 {
-	KILOBITS_PERSEC("K", "Kbit/sec"), MEGABITS_PERSEC("M", "Mbit/sec");
+	KILOBITS_PERSEC("K", "Kbit/sec"), MEGABITS_PERSEC("M", "Mbit/sec"),GIGABITS_PERSEC("G", "Gbit/sec");
 	
 	private String unit;
 	private String description;

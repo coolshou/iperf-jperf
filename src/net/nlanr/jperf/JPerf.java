@@ -40,7 +40,6 @@ import net.nlanr.jperf.ui.JPerfUI;
 public class JPerf
 {
 	public static final String JPERF_VERSION = "3.0.0";
-	// public static final String IPERF_URL = "http://iperf.sourceforge.net"; // iperf2 old
 	public static final String IPERF_URL = "https://github.com/esnet/iperf";
 
 	public static void main(String[] args)
@@ -53,20 +52,28 @@ public class JPerf
 				String iperfCommand = "iperf3";
 				String version = "";
 				Process process;
+				String arch =  System.getProperty("os.arch");
+				System.out.printf("arch: %s", arch);
 
 				// get version of Iperf
-				try
-				{
+				/* try
+				{	//system's iperf3
 					process = Runtime.getRuntime().exec(iperfCommand+" -v");
 				}
-				catch (Exception ioe)
+				catch (Exception ioe) */
 				{
 					Properties sysprops = System.getProperties();
 					String osName = ((String)sysprops.get("os.name")).toLowerCase();
-
-					if (new File("bin/iperf.exe").exists() && (osName.matches(".*win.*") || osName.matches(".*microsoft.*")))
+					if (osName.indexOf("win") >= 0)
 					{
-						iperfCommand = "bin/iperf.exe";
+						iperfCommand = iperfCommand + ".exe";
+					}
+					// x86/x64
+					if (new File("bin/"+arch+"/"+iperfCommand).exists())
+					//if (new File("bin/iperf.exe").exists() && (osName.matches(".*win.*") || osName.matches(".*microsoft.*")))
+					{
+						//iperfCommand = "bin/iperf.exe";
+						iperfCommand = "bin/"+arch+"/"+iperfCommand;
 						try
 						{
 							process = Runtime.getRuntime().exec(iperfCommand+" -v");
@@ -76,7 +83,7 @@ public class JPerf
 							JOptionPane.showMessageDialog(
 									null,
 									"<html>"+
-									"Impossible to start the iperf executable located here : <br>"+
+									"Impossible to start the iperf3 executable located here : <br>"+
 									new File(iperfCommand).getAbsolutePath()+
 									"</html>",
 									"Error",

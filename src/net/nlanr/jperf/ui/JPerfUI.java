@@ -3,6 +3,8 @@
  * - 03/2008: Class updated by Nicolas Richasse
  *
  * Changelog:
+ * -07/2019
+ * 	 - switch to iperf3 
  *-02/2008:
  * 	- code refactoring
  * 	- UI improved with the SwingX API and the Forms library
@@ -81,15 +83,17 @@ public class JPerfUI extends JFrame
 	private JScrollPane			outputScrollPane;
 	private JTextArea				output;
 
-	// quickstart parameters
+	// quick start parameters
 	private JTextField			iperfCommandLabel;
 	private JRadioButton		serverModeRadioButton, clientModeRadioButton;
 	private JCheckBox				lb_clientLimit;
-	private JLabel					lb_serverAddress, lb_serverPort, lb_listenPort, lb_simultaneousConnectionsNumber, lb_connectionsLimitNumber;
+	private JLabel					lb_serverAddress, lb_serverPort, lb_listenPort, lb_simultaneousConnectionsNumber;
+	// , lb_connectionsLimitNumber;
 	private JTextField			serverAddress;
 	private JTextField			clientLimit;
 	private IntegerSpinner	serverPort, listenPort;
-	private IntegerSpinner	simultaneousConnectionsNumber, connectionsLimitNumber;
+	private IntegerSpinner	simultaneousConnectionsNumber;
+	//, connectionsLimitNumber;
 	private JButton						startIperf, stopIperf, restoreDefaults, saveConfiguration, loadConfiguration;
 	private JCheckBox					lb_reverse;
 
@@ -122,7 +126,7 @@ public class JPerfUI extends JFrame
 	private JComboBox					tos;
 
 	// other parameters
-	private JCheckBox					printMSS;
+	// private JCheckBox					printMSS;
 	private JTextField				representativeFile;
 	private IntegerSpinner	omit, transmit;
 	private JComboBox					formatList;
@@ -173,9 +177,13 @@ public class JPerfUI extends JFrame
 		//String vers = version_split[2].replace('.', '-'); // iperf version 2.0.12 (25 June 2018) pthreads
 		String vers = version_split[1].replace('.', '-'); // iperf 3.7 (cJSON 1.5.2)
 		String[] version_num = vers.split("-");
-		iperfVersion = (new Float(version_num[1])).floatValue();
+		Float ver = Float.valueOf(version_num[1]);
+		// iperfVersion = (new Float(version_num[1])).floatValue();
+		iperfVersion = ver.floatValue();
 		iperfVersion /= 10.0;
-		iperfVersion += (new Float(version_num[0])).floatValue();
+		ver = Float.valueOf(version_num[0]);
+		// iperfVersion += (new Float(version_num[0])).floatValue();
+		iperfVersion += ver.floatValue();
 
 		// set up main panels
 		init();
@@ -223,7 +231,7 @@ public class JPerfUI extends JFrame
 		clientLimit.setText(p.getString(KEY_CLIENT_LIMIT, DEFAULT_CLIENT_LIMIT));
 		listenPort.setValue(p.getInteger(KEY_LISTEN_PORT, DEFAULT_LISTEN_PORT));
 		simultaneousConnectionsNumber.setValue(p.getInteger(KEY_PARALLEL_STREAMS, DEFAULT_PARALLEL_STREAMS));
-		connectionsLimitNumber.setValue(p.getInteger(KEY_NUM_CONNECTIONS, DEFAULT_NUM_CONNECTIONS));
+		// connectionsLimitNumber.setValue(p.getInteger(KEY_NUM_CONNECTIONS, DEFAULT_NUM_CONNECTIONS));
 
 		// application layer panel
 		//~ compatibilityMode.setSelected(p.getBoolean(KEY_COMPATIBILITY_MODE_ENABLED, DEFAULT_COMPATIBILITY_MODE_ENABLED));
@@ -249,8 +257,8 @@ public class JPerfUI extends JFrame
 		//~ tradeMode.setSelected(p.getBoolean(KEY_TEST_MODE_DUAL_ENABLED, DEFAULT_TEST_MODE_TRADE_ENABLED));
 		//~ _tradeMode_actionPerformed();
 		//~ testPort.setValue(p.getInteger(KEY_TEST_MODE_PORT, DEFAULT_TEST_MODE_PORT));
-		printMSS.setSelected(p.getBoolean(KEY_PRINT_MSS_ENABLED, DEFAULT_PRINT_MSS_ENABLED));
-		_printMSS_actionPerformed();
+		// printMSS.setSelected(p.getBoolean(KEY_PRINT_MSS_ENABLED, DEFAULT_PRINT_MSS_ENABLED));
+		// _printMSS_actionPerformed();
 
 		// transport layer panel
 		boolean isUDPModeSelected = p.getString(KEY_TRANSPORT_PROTOCOL, DEFAULT_TRANSPORT_PROTOCOL).equals("udp");
@@ -318,7 +326,7 @@ public class JPerfUI extends JFrame
 		p.put(KEY_CLIENT_LIMIT, clientLimit.getText());
 		p.put(KEY_LISTEN_PORT, listenPort.getValue());
 		p.put(KEY_PARALLEL_STREAMS, simultaneousConnectionsNumber.getValue());
-		p.put(KEY_NUM_CONNECTIONS, connectionsLimitNumber.getValue());
+		// p.put(KEY_NUM_CONNECTIONS, connectionsLimitNumber.getValue());
 
 
 		// application layer panel
@@ -332,7 +340,7 @@ public class JPerfUI extends JFrame
 		p.put(KEY_TEST_MODE_DUAL_ENABLED, dualMode.isSelected());
 		//~ p.put(KEY_TEST_MODE_TRADE_ENABLED, tradeMode.isSelected());
 		//~ p.put(KEY_TEST_MODE_PORT, testPort.getValue());
-		p.put(KEY_PRINT_MSS_ENABLED, printMSS.isSelected());
+		// p.put(KEY_PRINT_MSS_ENABLED, printMSS.isSelected());
 
 		// transport layer panel
 		p.put(KEY_TRANSPORT_PROTOCOL, udpRadioButton.isSelected() ? "udp" : "tcp");
@@ -400,8 +408,8 @@ public class JPerfUI extends JFrame
 		// set default values for compatibility
 		lb_clientLimit.setEnabled(false);
 		clientLimit.setEnabled(false);
-		lb_connectionsLimitNumber.setEnabled(false);
-		connectionsLimitNumber.setEnabled(false);
+		// lb_connectionsLimitNumber.setEnabled(false);
+		// connectionsLimitNumber.setEnabled(false);
 
 		// application layer
 		lb_omit.setEnabled(!serverModeSelected);
@@ -436,8 +444,8 @@ public class JPerfUI extends JFrame
 			lb_clientLimit.setEnabled(serverModeSelected);
 			clientLimit.setEnabled(serverModeSelected);
 
-			lb_connectionsLimitNumber.setEnabled(serverModeSelected);
-			connectionsLimitNumber.setEnabled(serverModeSelected);
+			// lb_connectionsLimitNumber.setEnabled(serverModeSelected);
+			// connectionsLimitNumber.setEnabled(serverModeSelected);
 		}
 
 		lb_listenPort.setEnabled(serverModeSelected);
@@ -516,13 +524,13 @@ public class JPerfUI extends JFrame
 			applicationForm.newLine();
 			applicationForm.addEmptyCell();
 			applicationForm.addEmptyCell();
-			lb_connectionsLimitNumber = new JLabel("Num Connections");
-			lb_connectionsLimitNumber.setOpaque(false);
-			lb_connectionsLimitNumber.setToolTipText("The number of connections to handle by the server before closing. Default is 0 (handle forever)   (command line: -P)");
-			applicationForm.addCell(lb_connectionsLimitNumber);
-			connectionsLimitNumber = new IntegerSpinner(0, Integer.MAX_VALUE, 0);
-			connectionsLimitNumber.addChangeListener(this);
-			applicationForm.addCell(connectionsLimitNumber);
+			// lb_connectionsLimitNumber = new JLabel("Num Connections");
+			// lb_connectionsLimitNumber.setOpaque(false);
+			// lb_connectionsLimitNumber.setToolTipText("The number of connections to handle by the server before closing. Default is 0 (handle forever)   (command line: -P)");
+			// applicationForm.addCell(lb_connectionsLimitNumber);
+			// connectionsLimitNumber = new IntegerSpinner(0, Integer.MAX_VALUE, 0);
+			// connectionsLimitNumber.addChangeListener(this);
+			// applicationForm.addCell(connectionsLimitNumber);
 
 			applicationForm.newLine();
 
@@ -669,11 +677,11 @@ public class JPerfUI extends JFrame
 			applicationForm.newLine();
 
 			// should we print MSS?
-			printMSS = new JCheckBox("Print MSS");
-			printMSS.addActionListener(this);
-			printMSS.setToolTipText("Print out TCP maximum segment size   (command line: -m)");
-			printMSS.setSelected(false);
-			applicationForm.addCell(printMSS);
+			// printMSS = new JCheckBox("Print MSS");
+			// printMSS.addActionListener(this);
+			// printMSS.setToolTipText("Print out TCP maximum segment size   (command line: -m)");
+			// printMSS.setSelected(false);
+			// applicationForm.addCell(printMSS);
 
 			applicationForm.newLine();
 
@@ -737,7 +745,7 @@ public class JPerfUI extends JFrame
 		tcpNoDelay.setEnabled(enabled);
 
 		// other options
-		printMSS.setEnabled(enabled);
+		// printMSS.setEnabled(enabled);
 		//lb_TTL.setEnabled(!enabled);
 		//TTL.setEnabled(!enabled);
 	}
@@ -840,7 +848,9 @@ public class JPerfUI extends JFrame
 
 			// bandwidth
 			lb_udpBandwidth = new JLabel("UDP Bandwidth");
-			lb_udpBandwidth.setToolTipText("Set bandwidth to send in bits/sec. Use 'K' or 'M' for kilo/mega bits. (i.e 8K)   (command line: -b)");
+			lb_udpBandwidth.setToolTipText("target bitrate in bits/sec (0 for unlimited) \n"+
+			"(default 1 Mbit/sec for UDP, unlimited for TCP)  \n"+
+			"(optional slash and packet count for burst mode). Use 'K' or 'M' for kilo/mega bits. (i.e 8K)   (command line: -b)");
 			udpForm.addCell(lb_udpBandwidth);
 			udpBandwidth = new DoubleSpinner(1, 9999, 1);
 			udpBandwidth.addChangeListener(this);
@@ -929,7 +939,7 @@ public class JPerfUI extends JFrame
 			// bind to IPv6 address
 			ipv6 = new JCheckBox("IPv6");
 			ipForm.addCell(ipv6);
-			ipv6.setToolTipText("Bind to an IPv6 address   (command line: -V)");
+			ipv6.setToolTipText("Bind to an IPv6 address   (command line: -6)");
 			ipv6.setSelected(false);
 			if (iperfVersion < 1.6)
 			{
@@ -1237,10 +1247,10 @@ public class JPerfUI extends JFrame
 	{
 		// nothing
 	}
-	private void _printMSS_actionPerformed()
-	{
-		// nothing
-	}
+	// private void _printMSS_actionPerformed()
+	// {
+	// 	// nothing
+	// }
 
 	private void _lb_tcpBufferLength_actionPerformed()
 	{
@@ -1326,10 +1336,10 @@ public class JPerfUI extends JFrame
 				{
 					_lb_reverse_actionPerformed();
 				}
-				else if (source == printMSS)
-				{
-					_printMSS_actionPerformed();
-				}
+				// else if (source == printMSS)
+				// {
+				// 	_printMSS_actionPerformed();
+				// }
 				else if (source == lb_tcpBufferLength)
 				{
 					_lb_tcpBufferLength_actionPerformed();
@@ -1550,20 +1560,20 @@ public class JPerfUI extends JFrame
 		{
 			options += " -P " + simultaneousConnectionsNumber.getValue();
 		}
-		else if (connectionsLimitNumber.isEnabled())
-		{
-			options += " -P " + connectionsLimitNumber.getValue();
-		}
+		// else if (connectionsLimitNumber.isEnabled())
+		// {
+		// 	options += " -P " + connectionsLimitNumber.getValue();
+		// }
 
 		options += " -i " + interval.getValue();
 		if (lb_reverse.isSelected() && lb_reverse.isEnabled())
 		{
 			options += " -R";
 		}
-		if (printMSS.isSelected() && printMSS.isEnabled())
-		{
-			options += " -m";
-		}
+		// if (printMSS.isSelected() && printMSS.isEnabled())
+		// {
+		// 	options += " -m";
+		// }
 		if (serverPort.isEnabled())
 		{
 			options += " -p " + serverPort.getValue();
@@ -1594,7 +1604,7 @@ public class JPerfUI extends JFrame
 		}
 		if (ipv6.isSelected() && ipv6.isEnabled())
 		{
-			options += " -V";
+			options += " -6";
 		}
 		if (lb_tcpBufferLength.isSelected() && tcpBufferLength.isEnabled())
 		{

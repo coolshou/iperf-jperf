@@ -20,6 +20,7 @@
 	<target name="clean">
 	    <delete dir="${project.release.distrib.dir}" includeemptydirs="true" />
 	</target>
+
 	<target name="release">
 		<mkdir dir="${project.release.distrib.dir}"/>
 		<copy todir="${project.release.distrib.dir}">
@@ -27,12 +28,16 @@
 				<include name="**/*"/>
 			</fileset>
 		</copy>
+		<chmod file="${project.release.distrib.dir}/jperf.sh" perm="+rx" />
+		<chmod file="${project.release.distrib.dir}/bin/amd64/iperf3" perm="+rx"  />
+		<chmod file="${project.release.distrib.dir}/bin/x86/iperf3" perm="+rx"  />
 		
 		<mkdir dir="${project.release.distrib.dir}/classes"/>
 		<javac
-			deprecation="no"
+			deprecation="yes"
 			nowarn="true"
 			classpathref="project.classpath"
+			 includeAntRuntime="false"
 			destdir="${project.release.distrib.dir}/classes">
 			<src path="${project.src.dir}"/>
 		</javac>
@@ -58,7 +63,6 @@
 				<include name="README.txt"/>
 			</fileset>
 		</copy>
-		<chmod file="${project.release.distrib.dir}/jperf.sh" perm="+x" type="both"/>
 	</target>
 
 	<target name="zipped" depends="release">
