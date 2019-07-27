@@ -34,8 +34,12 @@ This script will create a JPerf distribution into the 'release' directory.
 
 This script will create a zip distribution into the 'release' directory.
 
+* To clean package
+
+	> ant  clean -f utilities/build.xml
+
 * To build the OS X distributable disk image, execute:
 
-  > ant macdist
+  > ant macdist -f utilities/build.xml
 
 The resulting .dmg file will be in the 'release/jperf-<version>-mac' directory.

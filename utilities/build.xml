@@ -35,7 +35,6 @@
 		<mkdir dir="${project.release.distrib.dir}/classes"/>
 		<javac
 			deprecation="yes"
-			nowarn="true"
 			classpathref="project.classpath"
 			 includeAntRuntime="false"
 			destdir="${project.release.distrib.dir}/classes">
